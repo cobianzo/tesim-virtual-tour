@@ -1,0 +1,3 @@
+[submodule "posterlens"]
+	path = posterlens
+	url = git@github.com:cobianzo/posterlens.git
