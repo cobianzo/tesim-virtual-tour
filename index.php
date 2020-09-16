@@ -39,18 +39,11 @@
                 newParams.image = 'resources/poster'+posterIndex+'.jpg';
                 newParams.hoverText = newParams.image;
                 newParams.modal = 'resources/pdf.pdf';
-                console.log(newParams.image);
+                //console.log(newParams.image);
                 window.pl.createNewObjectFromParams(window.pl.viewer.panorama, newParams);
                 // console.log(`angle:  ${i}º : ${x} ${y}`);
             }
 
-            // Check whether control button is pressed
-            document.addEventListener( 'keydown' ,function(event) {
-                if (event.which == "17") window.pl.cntrlIsPressed = true;
-            });
-            document.addEventListener( 'keyup' ,function(event) {
-                    window.pl.cntrlIsPressed = false;
-            });
 
             window.OpacityTween = function(object) {
                 object.material.opacity = 0;
@@ -58,35 +51,49 @@
                 object.opacityTween = t;
                 return t;
             }
-            var enviromental = [
-                'casita',
-                'mujer',
-                'natura',
-            ];
+            window.PopupTween = function(object) {
+                object.originalPositionY = object.position.y;
+                object.position.y = -200;
+                const t = new TWEEN.Tween( object.position ).to( { y: object.originalPositionY }, 500).easing( TWEEN.Easing.Elastic.Out );;
+                object.popupTween = t;
+                return t;
+            }
+
+            var enviromental = {
+                'casita': [25, 100] ,
+                'mujer': [25, 100],
+                'natura': [25, 100],
+            };
+            // this doesnt recongineze objects becasue they are not still created. Should be done when created.
+            Object.keys(enviromental).forEach( k => {
+                const [min, max] = enviromental[k];
+                const object = pl.getObjectByName(k);
+                
+                if (!object) return;
+                // init setup for animation (hide object)
+                object.originalPositionY = object.position.y;
+                object.position.y = -200;
+                const t = new TWEEN.Tween( object.position ).to( { y: object.originalPositionY }, 500).easing( TWEEN.Easing.Elastic.Out );;
+                object.popupTween = t;
+                object.popupAnimationFn = () => {
+                    const angle = window.pl.viewer.camera.direction;
+
+                    if ( angle < max && angle > min) {
+                        object.popupTween.start();
+                        window.pl.viewer.addUpdateCallback( object.popupAnimationFn );
+                    }
+                }
+                window.pl.viewer.addUpdateCallback( object.popupAnimationFn );
+            })
+            
+
             window.pl.viewer.addUpdateCallback( function() {
-                //if (window.pl.cntrlIsPressed)
+                //if (window.pl.controlIsPressed)
 
                 const newDirection = window.pl.getCameraAngle('deg');
                 if (newDirection === window.pl.viewer.camera.direction) 
                 return;
-                
-                if (!pl.TweenAplied) {
-                    enviromental.forEach( nam => {
-                        const ob = pl.getObjectByName(nam);
-                        if (!ob) return;
-                        OpacityTween(ob);
-                        pl.TweenAplied = true;
-                     } );
-                }
-
-                if (!pl.enviromentalTweenPlayed && newDirection < 100 && newDirection > 25) {
-                    // activate things.
-                    pl.enviromentalTweenPlayed = true;
-                    enviromental.forEach( o => {
-                        const ob = pl.getObjectByName(o);
-                        ob.opacityTween.start();
-                    });
-                }
+               
 
                 window.pl.viewer.camera.direction = newDirection;
             });

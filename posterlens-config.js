@@ -47,7 +47,7 @@ datas[0] = {
               4.089801957752406,
               0
             ],
-            "scale": 5,
+            "scale": 3,
             "alwaysLookatCamera": true,
             "animatedMap": "3",
             "animatedMapSpeed": 1
@@ -106,6 +106,7 @@ datas[0] = {
           },
           {
             "name": "door environment",
+            "opacity": 0.9,
             "type": "poster3d",
             "pos": [
               122.76077111742909,
@@ -119,7 +120,7 @@ datas[0] = {
               3.6526499654878397,
               0
             ],
-            "scale": 214.3588810000002,
+            "scale": 100,
             "animated": "always",
             "hoverText": "Click to know all projects",
             "link": "Environment Pano"
@@ -215,6 +216,7 @@ datas[0] = {
                   155.8512377612073,
                   -300.92337515941523
                 ],
+                "opacity": 0.6, 
                 "image": "resources/environment.jpg",
                 "sprite": true,
                 "rot": [
@@ -222,7 +224,7 @@ datas[0] = {
                   3.6526499654878397,
                   0
                 ],
-                "scale": 214.3588810000002,
+                "scale": 150,
                 "animated": "always",
                 "hoverText": "Back",
                 "link": "Hall"
