@@ -26,6 +26,7 @@
                 animated: 'hover'
             }
             posterIndex = 1;
+            if (0) // this works
             for (var i=0; i< 360; i=i+10) {
                 posterIndex = (posterIndex++ % 3) + 1;
                 radius = 400;
@@ -44,7 +45,7 @@
                 // console.log(`angle:  ${i}º : ${x} ${y}`);
             }
 
-
+            // animation to show items when they appear on screen
             window.OpacityTween = function(object) {
                 object.material.opacity = 0;
                 const t = new TWEEN.Tween( object.material ).to( { opacity: 1 }, 500);
@@ -52,9 +53,10 @@
                 return t;
             }
             window.PopupTween = function(object) {
-                object.originalPositionY = object.position.y;
-                object.position.y = -200;
-                const t = new TWEEN.Tween( object.position ).to( { y: object.originalPositionY }, 500).easing( TWEEN.Easing.Elastic.Out );;
+                object.originalPositionY = parseFloat(object.position.y);
+                object.position.y = -100;
+                window.animPos = { y : object.position.y };
+                const t = new TWEEN.Tween( window.animPos ).to( { y: object.originalPositionY }, 500).onUpdate(()=> object.position.y = window.animPos.y ).easing( TWEEN.Easing.Elastic.Out );
                 object.popupTween = t;
                 return t;
             }
@@ -90,6 +92,7 @@
             window.pl.viewer.addUpdateCallback( function() {
                 //if (window.pl.controlIsPressed)
 
+                // update useful variable.
                 const newDirection = window.pl.getCameraAngle('deg');
                 if (newDirection === window.pl.viewer.camera.direction) 
                 return;
